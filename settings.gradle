@@ -1,0 +1,2 @@
+include ':app', ':flipper-realm-android'
+rootProject.name='Flipper-Realm'
