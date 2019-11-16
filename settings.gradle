@@ -1,2 +1,2 @@
-include ':app', ':flipper-realm-android'
+include ':sample', ':flipper-realm-android'
 rootProject.name='Flipper-Realm'
