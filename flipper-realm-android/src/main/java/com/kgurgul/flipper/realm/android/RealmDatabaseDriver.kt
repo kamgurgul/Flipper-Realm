@@ -26,15 +26,23 @@ class RealmDatabaseDriver(
     override fun getTableInfo(
         databaseDescriptor: RealmDatabaseDescriptor,
         table: String
-    ): DatabaseGetTableInfoResponse? {
-        return null
+    ): DatabaseGetTableInfoResponse {
+        return DatabaseGetTableInfoResponse(table)
     }
 
     override fun getTableStructure(
         databaseDescriptor: RealmDatabaseDescriptor,
         table: String
-    ): DatabaseGetTableStructureResponse? {
-        return null
+    ): DatabaseGetTableStructureResponse {
+        val structureColumns = listOf("Field name", "Field type")
+        val structureValue = mutableListOf<List<Any>>()
+        getFields(table).forEach { structureValue.add(listOf(it.first, it.second)) }
+        return DatabaseGetTableStructureResponse(
+            structureColumns,
+            structureValue,
+            emptyList(),
+            emptyList()
+        )
     }
 
     override fun getTableData(
@@ -53,6 +61,16 @@ class RealmDatabaseDriver(
         query: String
     ): DatabaseExecuteSqlResponse? {
         return null
+    }
+
+    /**
+     *  Realm doesn't support inherited models now so declaredFields will represent all fields
+     *  https://github.com/realm/realm-java/issues/761
+     *
+     *  @return [Pair] with field name and type
+     */
+    private fun getFields(table: String): List<Pair<String, String>> {
+        return Class.forName(table).declaredFields.map { it.name to it.type.name }
     }
 
     class RealmDatabaseDescriptor(
