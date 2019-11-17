@@ -21,7 +21,9 @@ class App : Application() {
         val realmConfiguration = RealmConfiguration.Builder()
             .name("testRealm")
             .schemaVersion(1)
+            .deleteRealmIfMigrationNeeded()
             .build()
+        Realm.setDefaultConfiguration(realmConfiguration)
 
         SoLoader.init(this, false)
         if (BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(this)) {

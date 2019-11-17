@@ -47,7 +47,6 @@ class RealmDatabaseDriver(
         )
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun getTableData(
         databaseDescriptor: RealmDatabaseDescriptor,
         table: String,
@@ -56,15 +55,16 @@ class RealmDatabaseDriver(
         start: Int,
         count: Int
     ): DatabaseGetTableDataResponse? {
-        val columns = mutableListOf<String>()
-        var total = 0L
-        // TODO
+        val columns = RealmHelper
+            .getTableColumns(databaseDescriptor.realmConfiguration, table)
+            .map { it.name }
+        val values = RealmHelper.getRows(databaseDescriptor.realmConfiguration, table)
         return DatabaseGetTableDataResponse(
             columns,
-            emptyList(),
-            start,
+            values,
             0,
-            total
+            values.size,
+            values.size.toLong()
         )
     }
 

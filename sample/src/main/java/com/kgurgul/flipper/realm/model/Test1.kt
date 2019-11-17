@@ -8,5 +8,8 @@ open class Test1(
     var id: Long = 0
 ) : RealmObject() {
     var nameTest: String? = null
-    var valueTest: Int? = null
+    var intTest: Int? = null
+    var booleanTest: Boolean? = null
+    var floatTest: Float? = null
+    var doubleTest: Double? = null
 }
