@@ -20,7 +20,7 @@ class RealmDatabaseDriver(
     }
 
     override fun getTableNames(databaseDescriptor: RealmDatabaseDescriptor): List<String> {
-        return databaseDescriptor.realmConfiguration.realmObjectClasses.map { it.name }
+        return RealmHelper.getTableNames(databaseDescriptor.realmConfiguration)
     }
 
     override fun getTableInfo(
@@ -34,9 +34,11 @@ class RealmDatabaseDriver(
         databaseDescriptor: RealmDatabaseDescriptor,
         table: String
     ): DatabaseGetTableStructureResponse {
-        val structureColumns = listOf("Field name", "Field type")
+        val structureColumns = listOf("Column name", "Column type", "Nullable")
         val structureValue = mutableListOf<List<Any>>()
-        getFields(table).forEach { structureValue.add(listOf(it.first, it.second)) }
+        RealmHelper.getTableColumns(databaseDescriptor.realmConfiguration, table).forEach {
+            structureValue.add(listOf(it.name, it.type, it.isNullable))
+        }
         return DatabaseGetTableStructureResponse(
             structureColumns,
             structureValue,
@@ -45,6 +47,7 @@ class RealmDatabaseDriver(
         )
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun getTableData(
         databaseDescriptor: RealmDatabaseDescriptor,
         table: String,
@@ -53,7 +56,16 @@ class RealmDatabaseDriver(
         start: Int,
         count: Int
     ): DatabaseGetTableDataResponse? {
-        return null
+        val columns = mutableListOf<String>()
+        var total = 0L
+        // TODO
+        return DatabaseGetTableDataResponse(
+            columns,
+            emptyList(),
+            start,
+            0,
+            total
+        )
     }
 
     override fun executeSQL(
@@ -61,16 +73,6 @@ class RealmDatabaseDriver(
         query: String
     ): DatabaseExecuteSqlResponse? {
         return null
-    }
-
-    /**
-     *  Realm doesn't support inherited models now so declaredFields will represent all fields
-     *  https://github.com/realm/realm-java/issues/761
-     *
-     *  @return [Pair] with field name and type
-     */
-    private fun getFields(table: String): List<Pair<String, String>> {
-        return Class.forName(table).declaredFields.map { it.name to it.type.name }
     }
 
     class RealmDatabaseDescriptor(
