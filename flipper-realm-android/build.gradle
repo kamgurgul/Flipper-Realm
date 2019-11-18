@@ -18,12 +18,28 @@ android {
     }
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = packageName
-            artifactId = project.getName()
-            version = pluginVersion
+project.afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = packageName
+                artifactId = project.getName()
+                version = pluginVersion
+                artifact(bundleReleaseAar)
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+                    configurations.implementation.allDependencies.each {
+                        if (it.group != null
+                                && (it.name != null || "unspecified" == it.name)
+                                && it.version != null) {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
+                        }
+                    }
+                }
+            }
         }
     }
 }
