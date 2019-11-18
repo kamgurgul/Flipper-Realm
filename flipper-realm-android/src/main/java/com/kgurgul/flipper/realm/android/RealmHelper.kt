@@ -43,19 +43,33 @@ object RealmHelper {
         }
     }
 
-    fun getRows(realmConfiguration: RealmConfiguration, tableName: String): List<List<Any>> {
+    fun getRows(
+        realmConfiguration: RealmConfiguration,
+        tableName: String,
+        start: Int,
+        count: Int
+    ): List<List<Any>> {
         return getSharedRealm(realmConfiguration).use { sharedRealm ->
             val valueList = mutableListOf<List<Any>>()
             val table = sharedRealm.getTable(tableName)
-            for (i in 0 until table.size()) {
+            for (i in start until table.size()) {
                 val rawCheckedRow = table.getCheckedRow(i)
                 val rowValues = mutableListOf<Any>()
                 for (j in 0 until rawCheckedRow.columnCount) {
                     rowValues.add(getRowData(rawCheckedRow, j))
                 }
                 valueList.add(rowValues)
+                if (valueList.size == count) {
+                    break
+                }
             }
             valueList
+        }
+    }
+
+    fun getRowsCount(realmConfiguration: RealmConfiguration, tableName: String): Long {
+        return getSharedRealm(realmConfiguration).use { sharedRealm ->
+            sharedRealm.getTable(tableName).size()
         }
     }
 
