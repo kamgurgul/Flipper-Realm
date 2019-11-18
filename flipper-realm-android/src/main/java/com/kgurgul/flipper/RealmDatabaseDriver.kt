@@ -1,4 +1,4 @@
-package com.kgurgul.flipper.realm.android
+package com.kgurgul.flipper
 
 import android.content.Context
 import com.facebook.flipper.plugins.databases.DatabaseDescriptor
@@ -16,11 +16,17 @@ class RealmDatabaseDriver(
 ) : DatabaseDriver<RealmDatabaseDriver.RealmDatabaseDescriptor>(context) {
 
     override fun getDatabases(): List<RealmDatabaseDescriptor> {
-        return realmDatabaseProvider.getRealmConfigurations().map { RealmDatabaseDescriptor(it) }
+        return realmDatabaseProvider.getRealmConfigurations().map {
+            RealmDatabaseDescriptor(
+                it
+            )
+        }
     }
 
     override fun getTableNames(databaseDescriptor: RealmDatabaseDescriptor): List<String> {
-        return RealmHelper.getTableNames(databaseDescriptor.realmConfiguration)
+        return RealmHelper.getTableNames(
+            databaseDescriptor.realmConfiguration
+        )
     }
 
     override fun getTableInfo(
@@ -36,7 +42,10 @@ class RealmDatabaseDriver(
     ): DatabaseGetTableStructureResponse {
         val structureColumns = listOf("Column name", "Column type", "Nullable")
         val structureValue = mutableListOf<List<Any>>()
-        RealmHelper.getTableColumns(databaseDescriptor.realmConfiguration, table).forEach {
+        RealmHelper.getTableColumns(
+            databaseDescriptor.realmConfiguration,
+            table
+        ).forEach {
             structureValue.add(listOf(it.name, it.type, it.isNullable))
         }
         return DatabaseGetTableStructureResponse(
@@ -55,16 +64,26 @@ class RealmDatabaseDriver(
         start: Int,
         count: Int
     ): DatabaseGetTableDataResponse? {
-        val columns = RealmHelper
-            .getTableColumns(databaseDescriptor.realmConfiguration, table)
+        val columns = RealmHelper.getTableColumns(
+            databaseDescriptor.realmConfiguration,
+            table
+        )
             .map { it.name }
-        val values = RealmHelper.getRows(databaseDescriptor.realmConfiguration, table, start, count)
+        val values = RealmHelper.getRows(
+            databaseDescriptor.realmConfiguration,
+            table,
+            start,
+            count
+        )
         return DatabaseGetTableDataResponse(
             columns,
             values,
             start,
             values.size,
-            RealmHelper.getRowsCount(databaseDescriptor.realmConfiguration, table)
+            RealmHelper.getRowsCount(
+                databaseDescriptor.realmConfiguration,
+                table
+            )
         )
     }
 

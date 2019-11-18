@@ -1,4 +1,4 @@
-package com.kgurgul.flipper.realm.android
+package com.kgurgul.flipper
 
 import io.realm.RealmConfiguration
 import io.realm.RealmFieldType
@@ -14,7 +14,8 @@ object RealmHelper {
     }
 
     fun getTableNames(realmConfiguration: RealmConfiguration): List<String> {
-        return getSharedRealm(realmConfiguration).use { sharedRealm ->
+        return getSharedRealm(realmConfiguration)
+            .use { sharedRealm ->
             val tableNames = mutableListOf<String>()
             for (i in 0 until sharedRealm.size()) {
                 tableNames.add(sharedRealm.getTableName(i.toInt()))
@@ -27,7 +28,8 @@ object RealmHelper {
         realmConfiguration: RealmConfiguration,
         tableName: String
     ): List<RealmColumnInfo> {
-        return getSharedRealm(realmConfiguration).use { sharedRealm ->
+        return getSharedRealm(realmConfiguration)
+            .use { sharedRealm ->
             val columnNames = mutableListOf<RealmColumnInfo>()
             val table = sharedRealm.getTable(tableName)
             for (i in 0 until table.columnCount) {
@@ -49,14 +51,20 @@ object RealmHelper {
         start: Int,
         count: Int
     ): List<List<Any>> {
-        return getSharedRealm(realmConfiguration).use { sharedRealm ->
+        return getSharedRealm(realmConfiguration)
+            .use { sharedRealm ->
             val valueList = mutableListOf<List<Any>>()
             val table = sharedRealm.getTable(tableName)
             for (i in start until table.size()) {
                 val rawCheckedRow = table.getCheckedRow(i)
                 val rowValues = mutableListOf<Any>()
                 for (j in 0 until rawCheckedRow.columnCount) {
-                    rowValues.add(getRowData(rawCheckedRow, j))
+                    rowValues.add(
+                        getRowData(
+                            rawCheckedRow,
+                            j
+                        )
+                    )
                 }
                 valueList.add(rowValues)
                 if (valueList.size == count) {
@@ -68,7 +76,8 @@ object RealmHelper {
     }
 
     fun getRowsCount(realmConfiguration: RealmConfiguration, tableName: String): Long {
-        return getSharedRealm(realmConfiguration).use { sharedRealm ->
+        return getSharedRealm(realmConfiguration)
+            .use { sharedRealm ->
             sharedRealm.getTable(tableName).size()
         }
     }

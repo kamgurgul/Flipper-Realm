@@ -7,8 +7,8 @@ import com.facebook.flipper.plugins.databases.DatabasesFlipperPlugin
 import com.facebook.flipper.plugins.inspector.DescriptorMapping
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.soloader.SoLoader
-import com.kgurgul.flipper.realm.android.RealmDatabaseDriver
-import com.kgurgul.flipper.realm.android.RealmDatabaseProvider
+import com.kgurgul.flipper.RealmDatabaseDriver
+import com.kgurgul.flipper.RealmDatabaseProvider
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
@@ -31,11 +31,13 @@ class App : Application() {
             client.addPlugin(InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()))
             client.addPlugin(
                 DatabasesFlipperPlugin(
-                    RealmDatabaseDriver(this, object : RealmDatabaseProvider {
-                        override fun getRealmConfigurations(): List<RealmConfiguration> {
-                            return listOf(realmConfiguration)
-                        }
-                    })
+                    RealmDatabaseDriver(
+                        this,
+                        object : RealmDatabaseProvider {
+                            override fun getRealmConfigurations(): List<RealmConfiguration> {
+                                return listOf(realmConfiguration)
+                            }
+                        })
                 )
             )
             client.start()

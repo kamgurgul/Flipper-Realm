@@ -1,4 +1,4 @@
-package com.kgurgul.flipper.realm.android
+package com.kgurgul.flipper
 
 import io.realm.RealmConfiguration
 
