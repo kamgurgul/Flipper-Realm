@@ -7,9 +7,9 @@ import io.realm.internal.Row
 import java.text.SimpleDateFormat
 import java.util.*
 
-object RealmHelper {
+internal object RealmHelper {
 
-    fun getSharedRealm(realmConfiguration: RealmConfiguration): OsSharedRealm {
+    private fun getSharedRealm(realmConfiguration: RealmConfiguration): OsSharedRealm {
         return OsSharedRealm.getInstance(realmConfiguration)
     }
 
