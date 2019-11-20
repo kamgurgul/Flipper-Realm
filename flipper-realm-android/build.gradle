@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
 
 def packageName = 'com.kgurgul.flipper'
-def pluginVersion = '0.0.1'
+def pluginVersion = '1.0.0'
 
 Properties properties = new Properties()
 if (project.rootProject.file('local.properties').canRead()) {

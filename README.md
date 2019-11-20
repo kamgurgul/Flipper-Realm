@@ -1,14 +1,14 @@
-Android Realm driver for [Flipper](https://github.com/facebook/flipper). It was 
+Android Realm driver for [Flipper](https://github.com/facebook/flipper). Driver was 
 tested with versions 5.4.+ and 6.+ of [Realm](https://github.com/realm/realm-java).
 
 Download
 ========
-* Add dependency
+* Add dependency:
 ```kotlin
 implementation "com.kgurgul.flipper:flipper-realm-android:1.0.0"
 ```
 * Instantiate and add the plugin in FlipperClient. All your 
-RealmConfigurations must be passed to RealmDatabaseProvider
+RealmConfigurations must be passed to RealmDatabaseProvider:
 ```kotlin
 client.addPlugin(
     DatabasesFlipperPlugin(
@@ -25,7 +25,15 @@ client.addPlugin(
 
 Usage
 =====
+Open Flipper app and select Database plugin
 <img src="info/flipper.png" width="512" />
+
+Features
+========
+* Displaying data from Realm database
+* Displaying database structure
+
+Currently it isn't possible to sort data by columns or modify database from Flipper.
 
 License
 -------
