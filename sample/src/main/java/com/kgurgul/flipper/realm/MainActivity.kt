@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.kgurgul.flipper.realm.model.Test1
 import com.kgurgul.flipper.realm.model.Test2
 import io.realm.Realm
+import io.realm.RealmList
 import io.realm.kotlin.createObject
 
 class MainActivity : AppCompatActivity() {
@@ -37,6 +38,8 @@ class MainActivity : AppCompatActivity() {
             val test3 = realm.createObject<Test2>()
             test3.colorName = "Color name 2"
             test3.colorValue = 30
+            test3.listTest = RealmList(realm.createObject(1000))
+            test3.listStringTest = RealmList("Abc", "Cdf")
         }
     }
 

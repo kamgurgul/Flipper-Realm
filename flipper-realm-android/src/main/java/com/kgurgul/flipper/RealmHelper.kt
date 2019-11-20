@@ -2,6 +2,7 @@ package com.kgurgul.flipper
 
 import io.realm.RealmConfiguration
 import io.realm.RealmFieldType
+import io.realm.internal.OsList
 import io.realm.internal.OsSharedRealm
 import io.realm.internal.Row
 import java.text.SimpleDateFormat
@@ -16,12 +17,12 @@ internal object RealmHelper {
     fun getTableNames(realmConfiguration: RealmConfiguration): List<String> {
         return getSharedRealm(realmConfiguration)
             .use { sharedRealm ->
-            val tableNames = mutableListOf<String>()
-            for (i in 0 until sharedRealm.size()) {
-                tableNames.add(sharedRealm.getTableName(i.toInt()))
+                val tableNames = mutableListOf<String>()
+                for (i in 0 until sharedRealm.size()) {
+                    tableNames.add(sharedRealm.getTableName(i.toInt()))
+                }
+                tableNames
             }
-            tableNames
-        }
     }
 
     fun getTableColumns(
@@ -30,19 +31,19 @@ internal object RealmHelper {
     ): List<RealmColumnInfo> {
         return getSharedRealm(realmConfiguration)
             .use { sharedRealm ->
-            val columnNames = mutableListOf<RealmColumnInfo>()
-            val table = sharedRealm.getTable(tableName)
-            for (i in 0 until table.columnCount) {
-                columnNames.add(
-                    RealmColumnInfo(
-                        table.getColumnName(i),
-                        table.getColumnType(i).name,
-                        table.isColumnNullable(i)
+                val columnNames = mutableListOf<RealmColumnInfo>()
+                val table = sharedRealm.getTable(tableName)
+                for (i in 0 until table.columnCount) {
+                    columnNames.add(
+                        RealmColumnInfo(
+                            table.getColumnName(i),
+                            table.getColumnType(i).name,
+                            table.isColumnNullable(i)
+                        )
                     )
-                )
+                }
+                columnNames
             }
-            columnNames
-        }
     }
 
     fun getRows(
@@ -53,33 +54,28 @@ internal object RealmHelper {
     ): List<List<Any>> {
         return getSharedRealm(realmConfiguration)
             .use { sharedRealm ->
-            val valueList = mutableListOf<List<Any>>()
-            val table = sharedRealm.getTable(tableName)
-            for (i in start until table.size()) {
-                val rawCheckedRow = table.getCheckedRow(i)
-                val rowValues = mutableListOf<Any>()
-                for (j in 0 until rawCheckedRow.columnCount) {
-                    rowValues.add(
-                        getRowData(
-                            rawCheckedRow,
-                            j
-                        )
-                    )
+                val valueList = mutableListOf<List<Any>>()
+                val table = sharedRealm.getTable(tableName)
+                for (i in start until table.size()) {
+                    val rawCheckedRow = table.getUncheckedRow(i)
+                    val rowValues = mutableListOf<Any>()
+                    for (j in 0 until rawCheckedRow.columnCount) {
+                        rowValues.add(getRowData(rawCheckedRow, j))
+                    }
+                    valueList.add(rowValues)
+                    if (valueList.size == count) {
+                        break
+                    }
                 }
-                valueList.add(rowValues)
-                if (valueList.size == count) {
-                    break
-                }
+                valueList
             }
-            valueList
-        }
     }
 
     fun getRowsCount(realmConfiguration: RealmConfiguration, tableName: String): Long {
         return getSharedRealm(realmConfiguration)
             .use { sharedRealm ->
-            sharedRealm.getTable(tableName).size()
-        }
+                sharedRealm.getTable(tableName).size()
+            }
     }
 
     private fun getRowData(row: Row, index: Long): Any {
@@ -151,7 +147,21 @@ internal object RealmHelper {
                 }
             }
             RealmFieldType.LIST -> {
-                "[FLIPPER_WARNING] - lists will be added later]"
+                formatList(row.getModelList(index))
+            }
+            RealmFieldType.INTEGER_LIST,
+            RealmFieldType.FLOAT_LIST,
+            RealmFieldType.DOUBLE_LIST,
+            RealmFieldType.BOOLEAN_LIST,
+            RealmFieldType.BINARY_LIST,
+            RealmFieldType.DATE_LIST,
+            RealmFieldType.STRING_LIST -> {
+                if (row.isNullLink(index)) {
+                    NULL
+                } else {
+                    val columnType = row.getColumnType(index)
+                    formatValueList(row.getValueList(index, columnType), columnType)
+                }
             }
             else -> "[FLIPPER_UNKNOWN_VALUE]"
         }
@@ -160,6 +170,36 @@ internal object RealmHelper {
     private fun formatDate(date: Date): String {
         val sdf = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.LONG)
         return "${sdf.format(date)} (${date.time})"
+    }
+
+    private fun formatList(osList: OsList): String {
+        val sb = StringBuilder(osList.targetTable?.name ?: "")
+        val size = osList.size()
+        sb.append("{")
+        for (i in 0 until size) {
+            sb.append(osList.getUncheckedRow(i).index)
+            sb.append(',')
+        }
+        if (size > 0) {
+            sb.setLength(sb.length - 1)
+        }
+        sb.append("}")
+        return sb.toString()
+    }
+
+    private fun formatValueList(osList: OsList, columnType: RealmFieldType): String {
+        val sb = StringBuilder(columnType.name)
+        val size = osList.size()
+        sb.append("{")
+        for (i in 0 until size) {
+            sb.append(osList.getValue(i))
+            sb.append(',')
+        }
+        if (size > 0) {
+            sb.setLength(sb.length - 1)
+        }
+        sb.append("}")
+        return sb.toString()
     }
 
     data class RealmColumnInfo(
