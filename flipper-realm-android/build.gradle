@@ -6,6 +6,11 @@ apply plugin: 'maven-publish'
 def packageName = 'com.kgurgul.flipper'
 def pluginVersion = '0.0.1'
 
+Properties properties = new Properties()
+if (project.rootProject.file('local.properties').canRead()) {
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
