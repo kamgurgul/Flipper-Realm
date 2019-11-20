@@ -26,6 +26,7 @@ client.addPlugin(
 Usage
 =====
 Open Flipper app and select Database plugin
+
 <img src="info/flipper.png" width="512" />
 
 Features
