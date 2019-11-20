@@ -25,10 +25,10 @@ class MainActivity : AppCompatActivity() {
             for (i in 0 until 200) {
                 val test1 = realm.createObject<Test1>(i)
                 test1.nameTest = "Name test"
-                test1.intTest = 10
-                test1.booleanTest = true
-                test1.floatTest = 11.11f
-                test1.doubleTest = 12.12
+                test1.intTest = 10 + i
+                test1.booleanTest = i % 2 == 0
+                test1.floatTest = 11.11f + i
+                test1.doubleTest = 12.12 + i
             }
 
             val test2 = realm.createObject<Test2>()

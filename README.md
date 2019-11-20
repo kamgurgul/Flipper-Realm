@@ -25,7 +25,7 @@ client.addPlugin(
 
 Usage
 =====
-
+<img src="info/flipper.png" width="512" />
 
 License
 -------
