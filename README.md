@@ -1,3 +1,5 @@
+[ ![Download](https://api.bintray.com/packages/kamgurgul/flipper/flipper-realm-android/images/download.svg?version=1.0.0) ](https://bintray.com/kamgurgul/flipper/flipper-realm-android/1.0.0/link)
+
 Android Realm driver for [Flipper](https://github.com/facebook/flipper). Driver was 
 tested with [Realm](https://github.com/realm/realm-java) versions 5.4.+ and 6.+.
 
