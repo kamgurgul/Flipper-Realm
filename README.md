@@ -3,6 +3,7 @@ tested with [Realm](https://github.com/realm/realm-java) versions 5.4.+ and 6.+.
 
 Download
 ========
+* Configure [Flipper](https://fbflipper.com/docs/getting-started.html)
 * Top level gradle:
 ```kotlin
 allprojects {
