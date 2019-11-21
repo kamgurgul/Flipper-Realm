@@ -1,5 +1,5 @@
 Android Realm driver for [Flipper](https://github.com/facebook/flipper). Driver was 
-tested with versions 5.4.+ and 6.+ of [Realm](https://github.com/realm/realm-java).
+tested with [Realm](https://github.com/realm/realm-java) versions 5.4.+ and 6.+.
 
 Download
 ========
