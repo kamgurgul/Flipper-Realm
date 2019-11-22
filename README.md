@@ -15,7 +15,7 @@ allprojects {
     }
 }
 ```
-* Dependency (not visible yet):
+* Dependency:
 ```kotlin
 implementation "com.kgurgul.flipper:flipper-realm-android:1.0.0"
 ```
