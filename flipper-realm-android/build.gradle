@@ -40,6 +40,11 @@ android {
     }
 }
 
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier = "sources"
+}
+
 project.afterEvaluate {
     publishing {
         publications {
@@ -47,7 +52,8 @@ project.afterEvaluate {
                 groupId = packageName
                 artifactId = project.getName()
                 version = pluginVersion
-                artifact(bundleReleaseAar)
+                artifact bundleReleaseAar
+                artifact sourceJar
                 pom.withXml {
                     def dependenciesNode = asNode().appendNode('dependencies')
                     configurations.implementation.allDependencies.each {
@@ -78,6 +84,7 @@ bintray {
         websiteUrl = 'https://github.com/kamgurgul/Flipper-Realm'
         issueTrackerUrl = 'https://github.com/kamgurgul/Flipper-Realm/issues'
         vcsUrl = 'https://github.com/kamgurgul/Flipper-Realm.git'
+        publish = true
         version {
             name = pluginVersion
             released  = new Date()
