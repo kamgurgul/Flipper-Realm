@@ -19,7 +19,7 @@ allprojects {
 ```kotlin
 implementation "com.kgurgul.flipper:flipper-realm-android:1.0.0"
 ```
-* Instantiate and add the plugin in FlipperClient. All your 
+* Instantiate and add plugin to the FlipperClient. All your 
 RealmConfigurations should be passed to RealmDatabaseProvider:
 ```kotlin
 client.addPlugin(
@@ -37,7 +37,7 @@ client.addPlugin(
 
 Usage
 =====
-Open Flipper app and select Database plugin
+Open Flipper app and enable Database plugin
 
 <img src="info/flipper.png" width="512" />
 
