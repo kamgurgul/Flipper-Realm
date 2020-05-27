@@ -1,3 +1,4 @@
+[ ![Download](https://api.bintray.com/packages/kamgurgul/flipper/flipper-realm-android/images/download.svg?version=2.0.0) ](https://bintray.com/kamgurgul/flipper/flipper-realm-android/2.0.0/link)
 [ ![Download](https://api.bintray.com/packages/kamgurgul/flipper/flipper-realm-android/images/download.svg?version=1.0.0) ](https://bintray.com/kamgurgul/flipper/flipper-realm-android/1.0.0/link)
 
 Android Realm driver for [Flipper](https://github.com/facebook/flipper).
@@ -19,7 +20,8 @@ allprojects {
 }
 ```
 * Dependency:
-Realm version >= 7 (not published yet):
+
+Realm version >= 7:
 ```kotlin
 implementation "com.kgurgul.flipper:flipper-realm-android:2.0.0"
 ```
