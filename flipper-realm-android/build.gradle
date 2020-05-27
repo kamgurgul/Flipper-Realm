@@ -21,7 +21,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
 def packageName = 'com.kgurgul.flipper'
-def pluginVersion = '1.0.0'
+def pluginVersion = '2.0.0'
 
 Properties properties = new Properties()
 if (project.rootProject.file('local.properties').canRead()) {

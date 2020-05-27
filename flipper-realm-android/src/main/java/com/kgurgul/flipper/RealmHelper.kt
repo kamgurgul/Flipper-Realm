@@ -19,6 +19,7 @@ package com.kgurgul.flipper
 import io.realm.RealmConfiguration
 import io.realm.RealmFieldType
 import io.realm.internal.OsList
+import io.realm.internal.OsResults
 import io.realm.internal.OsSharedRealm
 import io.realm.internal.Row
 import java.text.SimpleDateFormat
@@ -27,7 +28,7 @@ import java.util.*
 internal object RealmHelper {
 
     private fun getSharedRealm(realmConfiguration: RealmConfiguration): OsSharedRealm {
-        return OsSharedRealm.getInstance(realmConfiguration)
+        return OsSharedRealm.getInstance(realmConfiguration, OsSharedRealm.VersionID.LIVE)
     }
 
     fun getTableNames(realmConfiguration: RealmConfiguration): List<String> {
@@ -35,7 +36,7 @@ internal object RealmHelper {
             .use { sharedRealm ->
                 val tableNames = mutableListOf<String>()
                 for (i in 0 until sharedRealm.size()) {
-                    tableNames.add(sharedRealm.getTableName(i.toInt()))
+                    tableNames.add(sharedRealm.tablesNames[i.toInt()])
                 }
                 tableNames
             }
@@ -49,12 +50,13 @@ internal object RealmHelper {
             .use { sharedRealm ->
                 val columnNames = mutableListOf<RealmColumnInfo>()
                 val table = sharedRealm.getTable(tableName)
-                for (i in 0 until table.columnCount) {
+                for (columnName in table.columnNames) {
+                    val columnKey = table.getColumnKey(columnName)
                     columnNames.add(
                         RealmColumnInfo(
-                            table.getColumnName(i),
-                            table.getColumnType(i).name,
-                            table.isColumnNullable(i)
+                            columnName,
+                            table.getColumnType(columnKey).name,
+                            table.isColumnNullable(columnKey)
                         )
                     )
                 }
@@ -72,11 +74,12 @@ internal object RealmHelper {
             .use { sharedRealm ->
                 val valueList = mutableListOf<List<Any>>()
                 val table = sharedRealm.getTable(tableName)
-                for (i in start until table.size()) {
-                    val rawCheckedRow = table.getUncheckedRow(i)
+                val osResults = OsResults.createFromQuery(sharedRealm, table.where())
+                for (i in start until osResults.size()) {
+                    val uncheckedRow = osResults.getUncheckedRow(i.toInt())
                     val rowValues = mutableListOf<Any>()
-                    for (j in 0 until rawCheckedRow.columnCount) {
-                        rowValues.add(getRowData(rawCheckedRow, j))
+                    for (columnName in uncheckedRow.columnNames) {
+                        rowValues.add(getRowData(uncheckedRow, columnName))
                     }
                     valueList.add(rowValues)
                     if (valueList.size == count) {
@@ -90,80 +93,73 @@ internal object RealmHelper {
     fun getRowsCount(realmConfiguration: RealmConfiguration, tableName: String): Long {
         return getSharedRealm(realmConfiguration)
             .use { sharedRealm ->
-                sharedRealm.getTable(tableName).size()
+                OsResults
+                    .createFromQuery(sharedRealm, sharedRealm.getTable(tableName).where())
+                    .size()
             }
     }
 
-    private fun getRowData(row: Row, index: Long): Any {
-        return when (row.getColumnType(index)) {
+    private fun getRowData(row: Row, columnName: String): Any {
+        val columnKey = row.getColumnKey(columnName)
+        return when (row.getColumnType(columnKey)) {
             RealmFieldType.INTEGER -> {
-                if (row.isNull(index)) {
+                if (row.isNull(columnKey)) {
                     NULL
                 } else {
-                    row.getLong(index).toString()
+                    row.getLong(columnKey).toString()
                 }
             }
             RealmFieldType.BOOLEAN -> {
-                if (row.isNull(index)) {
+                if (row.isNull(columnKey)) {
                     NULL
                 } else {
-                    row.getBoolean(index)
+                    row.getBoolean(columnKey)
                 }
             }
             RealmFieldType.STRING -> {
-                if (row.isNull(index)) {
+                if (row.isNull(columnKey)) {
                     NULL
                 } else {
-                    row.getString(index)
+                    row.getString(columnKey)
                 }
             }
             RealmFieldType.BINARY -> {
-                if (row.isNull(index)) {
+                if (row.isNull(columnKey)) {
                     NULL
                 } else {
-                    row.getBinaryByteArray(index).toString()
+                    row.getBinaryByteArray(columnKey).toString()
                 }
             }
             RealmFieldType.DATE -> {
-                if (row.isNull(index)) {
+                if (row.isNull(columnKey)) {
                     NULL
                 } else {
-                    formatDate(row.getDate(index))
+                    formatDate(row.getDate(columnKey))
                 }
             }
             RealmFieldType.FLOAT -> {
-                if (row.isNull(index)) {
+                if (row.isNull(columnKey)) {
                     NULL
                 } else {
-                    when (val aFloat = row.getFloat(index)) {
-                        Float.NaN -> "NaN"
-                        Float.POSITIVE_INFINITY -> "Infinity"
-                        Float.NEGATIVE_INFINITY -> "-Infinity"
-                        else -> aFloat.toString()
-                    }
+                    row.getFloat(columnKey).toString()
                 }
             }
             RealmFieldType.DOUBLE -> {
-                if (row.isNull(index)) {
+                if (row.isNull(columnKey)) {
                     NULL
                 } else {
-                    when (val aDouble = row.getDouble(index)) {
-                        Double.NaN -> "NaN"
-                        Double.POSITIVE_INFINITY -> "Infinity"
-                        Double.NEGATIVE_INFINITY -> "-Infinity"
-                        else -> aDouble.toString()
-                    }
+                    row.getDouble(columnKey).toString()
                 }
             }
             RealmFieldType.OBJECT -> {
-                if (row.isNullLink(index)) {
+                if (row.isNullLink(columnKey)) {
                     NULL
                 } else {
-                    row.getLink(index).toString()
+                    row.getLink(columnKey).toString()
                 }
             }
             RealmFieldType.LIST -> {
-                formatList(row.getModelList(index))
+                formatList(row.getModelList(columnKey))
             }
             RealmFieldType.INTEGER_LIST,
             RealmFieldType.FLOAT_LIST,
@@ -172,11 +168,11 @@ internal object RealmHelper {
             RealmFieldType.BINARY_LIST,
             RealmFieldType.DATE_LIST,
             RealmFieldType.STRING_LIST -> {
-                if (row.isNullLink(index)) {
+                if (row.isNullLink(columnKey)) {
                     NULL
                 } else {
-                    val columnType = row.getColumnType(index)
-                    formatValueList(row.getValueList(index, columnType), columnType)
+                    val columnType = row.getColumnType(columnKey)
+                    formatValueList(row.getValueList(columnKey, columnType), columnType)
                 }
             }
             else -> "[FLIPPER_UNKNOWN_VALUE]"
@@ -193,7 +189,7 @@ internal object RealmHelper {
         val size = osList.size()
         sb.append("{")
         for (i in 0 until size) {
-            sb.append(osList.getUncheckedRow(i).index)
+            sb.append(osList.getUncheckedRow(i).objectKey)
             sb.append(',')
         }
         if (size > 0) {
