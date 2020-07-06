@@ -18,10 +18,10 @@ package com.kgurgul.flipper
 
 import io.realm.RealmConfiguration
 import io.realm.RealmFieldType
-import io.realm.internal.OsList
-import io.realm.internal.OsResults
-import io.realm.internal.OsSharedRealm
-import io.realm.internal.Row
+import io.realm.Sort
+import io.realm.internal.*
+import io.realm.internal.core.DescriptorOrdering
+import io.realm.internal.core.QueryDescriptor
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -68,13 +68,22 @@ internal object RealmHelper {
         realmConfiguration: RealmConfiguration,
         tableName: String,
         start: Int,
-        count: Int
+        count: Int,
+        order: String?,
+        reverse: Boolean
     ): List<List<Any>> {
         return getSharedRealm(realmConfiguration)
             .use { sharedRealm ->
                 val valueList = mutableListOf<List<Any>>()
                 val table = sharedRealm.getTable(tableName)
-                val osResults = OsResults.createFromQuery(sharedRealm, table.where())
+                val queryOrder = DescriptorOrdering().apply {
+                    if (order != null) {
+                        val sortOrder = if (reverse) Sort.DESCENDING else Sort.ASCENDING
+                        // TODO: find a way to pass the proper proxy here
+                        appendSort(QueryDescriptor.getInstanceForSort(null, table, order, sortOrder))
+                    }
+                }
+                val osResults = OsResults.createFromQuery(sharedRealm, table.where(), queryOrder)
                 for (i in start until osResults.size()) {
                     val uncheckedRow = osResults.getUncheckedRow(i.toInt())
                     val rowValues = mutableListOf<Any>()

@@ -83,13 +83,14 @@ class RealmDatabaseDriver(
         val columns = RealmHelper.getTableColumns(
             databaseDescriptor.realmConfiguration,
             table
-        )
-            .map { it.name }
+        ).map { it.name }
         val values = RealmHelper.getRows(
             databaseDescriptor.realmConfiguration,
             table,
             start,
-            count
+            count,
+            order,
+            reverse
         )
         return DatabaseGetTableDataResponse(
             columns,
