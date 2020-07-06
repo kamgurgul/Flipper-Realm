@@ -22,6 +22,7 @@ import io.realm.Sort
 import io.realm.internal.*
 import io.realm.internal.core.DescriptorOrdering
 import io.realm.internal.core.QueryDescriptor
+import io.realm.internal.fields.FieldDescriptor
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -79,8 +80,9 @@ internal object RealmHelper {
                 val queryOrder = DescriptorOrdering().apply {
                     if (order != null) {
                         val sortOrder = if (reverse) Sort.DESCENDING else Sort.ASCENDING
-                        // TODO: find a way to pass the proper proxy here
-                        appendSort(QueryDescriptor.getInstanceForSort(null, table, order, sortOrder))
+                        // TODO: find a way to pass the proper proxy here; it's working, though
+                        val proxy: FieldDescriptor.SchemaProxy? = null
+                        appendSort(QueryDescriptor.getInstanceForSort(proxy, table, order, sortOrder))
                     }
                 }
                 val osResults = OsResults.createFromQuery(sharedRealm, table.where(), queryOrder)
