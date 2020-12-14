@@ -40,6 +40,7 @@ class App : Application() {
             .name("testRealm")
             .schemaVersion(1)
             .deleteRealmIfMigrationNeeded()
+            .allowWritesOnUiThread(true)
             .build()
         Realm.setDefaultConfiguration(realmConfiguration)
 

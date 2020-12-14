@@ -4,7 +4,7 @@
 Android Realm driver for [Flipper](https://github.com/facebook/flipper).
 
 Because of breaking changes between [Realm](https://github.com/realm/realm-java) versions driver is split into two versions:
-* **2.+** for **Realm 7.+**
+* **2.+** for **Realm 7.+** and **Realm 10.+**
 * **1.+** for **Realm 5.+** and **Realm 6.+**
 
 Download
