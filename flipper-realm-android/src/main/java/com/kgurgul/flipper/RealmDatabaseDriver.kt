@@ -33,9 +33,7 @@ class RealmDatabaseDriver(
 
     override fun getDatabases(): List<RealmDatabaseDescriptor> {
         return realmDatabaseProvider.getRealmConfigurations().map {
-            RealmDatabaseDescriptor(
-                it
-            )
+            RealmDatabaseDescriptor(it)
         }
     }
 

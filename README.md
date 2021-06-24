@@ -1,11 +1,10 @@
-[ ![Download](https://api.bintray.com/packages/kamgurgul/flipper/flipper-realm-android/images/download.svg?version=2.0.0) ](https://bintray.com/kamgurgul/flipper/flipper-realm-android/2.0.0/link)
-[ ![Download](https://api.bintray.com/packages/kamgurgul/flipper/flipper-realm-android/images/download.svg?version=1.0.0) ](https://bintray.com/kamgurgul/flipper/flipper-realm-android/1.0.0/link)
+[![Download](https://img.shields.io/maven-central/v/com.kgurgul.flipper/flipper-realm-android/2.1.0)](https://search.maven.org/artifact/com.kgurgul.flipper/flipper-realm-android/2.1.0/pom)
 
 Android Realm driver for [Flipper](https://github.com/facebook/flipper).
 
 Because of breaking changes between [Realm](https://github.com/realm/realm-java) versions driver is split into two versions:
-* **2.+** for **Realm 7.+** and **Realm 10.+**
-* **1.+** for **Realm 5.+** and **Realm 6.+**
+* **2.+** for **Realm 7.+** and **Realm 10.+** (from 2.1.0 available on mavenCentral)
+* **1.+** for **Realm 5.+** and **Realm 6.+** (legacy version still available on jcenter)
 
 Download
 ========
@@ -15,19 +14,14 @@ Download
 allprojects {
     repositories {
         ...
-        jcenter()
+        mavenCentral()
     }
 }
 ```
 * Dependency:
 
-Realm version >= 7:
 ```kotlin
-implementation "com.kgurgul.flipper:flipper-realm-android:2.0.0"
-```
-Realm version < 7:
-```kotlin
-implementation "com.kgurgul.flipper:flipper-realm-android:1.0.0"
+implementation "com.kgurgul.flipper:flipper-realm-android:2.1.0"
 ```
 * Instantiate and add plugin to the FlipperClient. All your 
 RealmConfigurations should be passed to RealmDatabaseProvider:

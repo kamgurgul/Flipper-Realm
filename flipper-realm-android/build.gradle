@@ -16,16 +16,8 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
-
-def packageName = 'com.kgurgul.flipper'
-def pluginVersion = '2.0.0'
-
-Properties properties = new Properties()
-if (project.rootProject.file('local.properties').canRead()) {
-    properties.load(project.rootProject.file("local.properties").newDataInputStream())
-}
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'com.vanniktech.maven.publish'
 
 android {
     compileSdkVersion 30
@@ -33,60 +25,6 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 1
-        versionName pluginVersion
-    }
-}
-
-task sourceJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    archiveClassifier = "sources"
-}
-
-project.afterEvaluate {
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                groupId = packageName
-                artifactId = project.getName()
-                version = pluginVersion
-                artifact bundleReleaseAar
-                artifact sourceJar
-                pom.withXml {
-                    def dependenciesNode = asNode().appendNode('dependencies')
-                    configurations.implementation.allDependencies.each {
-                        if (it.group != null
-                                && (it.name != null || "unspecified" == it.name)
-                                && it.version != null) {
-                            def dependencyNode = dependenciesNode.appendNode('dependency')
-                            dependencyNode.appendNode('groupId', it.group)
-                            dependencyNode.appendNode('artifactId', it.name)
-                            dependencyNode.appendNode('version', it.version)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-bintray {
-    user = properties.getProperty("bintray.username")
-    key = properties.getProperty("bintray.apikey")
-    publications = ['maven']
-    pkg {
-        repo = 'flipper'
-        name = project.getName()
-        licenses = ['Apache-2.0']
-        desc = 'Android Realm database driver for Facebook Flipper'
-        websiteUrl = 'https://github.com/kamgurgul/Flipper-Realm'
-        issueTrackerUrl = 'https://github.com/kamgurgul/Flipper-Realm/issues'
-        vcsUrl = 'https://github.com/kamgurgul/Flipper-Realm.git'
-        publish = true
-        version {
-            name = pluginVersion
-            released  = new Date()
-        }
     }
 }
 
