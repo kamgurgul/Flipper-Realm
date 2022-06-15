@@ -48,9 +48,10 @@ Open Flipper app and enable Database plugin
 Features
 ========
 * Displaying data from Realm database
+* Sort data by columns, for the types `RealmFieldType.BOOLEAN`, `RealmFieldType.INTEGER`, `RealmFieldType.FLOAT`, `RealmFieldType.DOUBLE`, `RealmFieldType.STRING`, `RealmFieldType.DATE`.
 * Displaying database structure
 
-Currently it is not possible to sort data by columns or modify database from Flipper.
+Currently it is not possible to modify database from Flipper.
 
 License
 -------

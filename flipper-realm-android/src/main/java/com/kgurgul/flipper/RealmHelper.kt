@@ -18,6 +18,7 @@ package com.kgurgul.flipper
 
 import io.realm.RealmConfiguration
 import io.realm.RealmFieldType
+import io.realm.Sort
 import io.realm.internal.OsList
 import io.realm.internal.OsResults
 import io.realm.internal.OsSharedRealm
@@ -64,9 +65,29 @@ internal object RealmHelper {
             }
     }
 
+    private fun getTableColumnFieldType(
+        sharedRealm: OsSharedRealm,
+        tableName: String,
+        columnName: String
+    ): RealmFieldType {
+        val table = sharedRealm.getTable(tableName)
+        return table.getColumnType(table.getColumnKey(columnName))
+    }
+
+    private val sortableColumnFieldType = listOf(
+        RealmFieldType.BOOLEAN,
+        RealmFieldType.INTEGER,
+        RealmFieldType.FLOAT,
+        RealmFieldType.DOUBLE,
+        RealmFieldType.STRING,
+        RealmFieldType.DATE,
+    )
+
     fun getRows(
         realmConfiguration: RealmConfiguration,
         tableName: String,
+        order: String?,
+        reverse: Boolean,
         start: Int,
         count: Int
     ): List<List<Any>> {
@@ -74,7 +95,28 @@ internal object RealmHelper {
             .use { sharedRealm ->
                 val valueList = mutableListOf<List<Any>>()
                 val table = sharedRealm.getTable(tableName)
-                val osResults = OsResults.createFromQuery(sharedRealm, table.where())
+                val osResults = OsResults.createFromQuery(
+                    sharedRealm,
+                    table.where()
+                        .apply {
+                            order
+                                ?.takeIf {
+                                    getTableColumnFieldType(
+                                        sharedRealm,
+                                        tableName,
+                                        it
+                                    ) in sortableColumnFieldType
+                                }
+                                ?.let {
+                                    val sortOrder = if (reverse) Sort.DESCENDING else Sort.ASCENDING
+                                    sort(
+                                        null,
+                                        arrayOf(it),
+                                        arrayOf(sortOrder)
+                                    )
+                                }
+                        }
+                )
                 for (i in start until osResults.size()) {
                     val uncheckedRow = osResults.getUncheckedRow(i.toInt())
                     val rowValues = mutableListOf<Any>()
