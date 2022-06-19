@@ -21,7 +21,6 @@ import com.facebook.flipper.plugins.databases.DatabaseDescriptor
 import com.facebook.flipper.plugins.databases.DatabaseDriver
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import java.io.File
 
 /**
  * Flipper driver for [Realm] database
@@ -33,7 +32,7 @@ class RealmDatabaseDriver(
 
     override fun getDatabases(): List<RealmDatabaseDescriptor> {
         return realmDatabaseProvider.getRealmConfigurations().map {
-            RealmDatabaseDescriptor(it)
+            RealmDatabaseDescriptor(it, context.packageName)
         }
     }
 
@@ -107,13 +106,17 @@ class RealmDatabaseDriver(
         databaseDescriptor: RealmDatabaseDescriptor,
         query: String
     ): DatabaseExecuteSqlResponse? {
+        context
         return null
     }
 
     class RealmDatabaseDescriptor(
-        val realmConfiguration: RealmConfiguration
+        val realmConfiguration: RealmConfiguration,
+        private val packageName: String
     ) : DatabaseDescriptor {
 
-        override fun name(): String = File(realmConfiguration.path).name
+        // Return the full path after the package name, useful if multiple instances of Realm
+        // have the same name, but not the same location.
+        override fun name() = "…" + realmConfiguration.path.substringAfterLast(packageName)
     }
 }
