@@ -15,17 +15,17 @@
  */
 
 buildscript {
-    ext.kotlin_version = '1.5.10'
-    ext.dokka_version = '1.4.32'
-    ext.realm_version = '10.6.0'
-    ext.flipper_version = '0.94.1'
+    ext.kotlin_version = '1.6.21'
+    ext.dokka_version = '1.6.21'
+    ext.realm_version = '10.11.0'
+    ext.flipper_version = '0.150.0'
     repositories {
         google()
         mavenCentral()
         gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.1'
+        classpath 'com.android.tools.build:gradle:7.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
         classpath "io.realm:realm-gradle-plugin:$realm_version"

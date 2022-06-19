@@ -1,4 +1,4 @@
-[![Download](https://img.shields.io/maven-central/v/com.kgurgul.flipper/flipper-realm-android/2.1.0)](https://search.maven.org/artifact/com.kgurgul.flipper/flipper-realm-android/2.1.0/pom)
+[![Download](https://img.shields.io/maven-central/v/com.kgurgul.flipper/flipper-realm-android/2.2.0)](https://search.maven.org/artifact/com.kgurgul.flipper/flipper-realm-android/2.1.0/pom)
 
 Android Realm driver for [Flipper](https://github.com/facebook/flipper).
 
@@ -21,7 +21,7 @@ allprojects {
 * Dependency:
 
 ```kotlin
-implementation "com.kgurgul.flipper:flipper-realm-android:2.1.0"
+implementation "com.kgurgul.flipper:flipper-realm-android:2.2.0"
 ```
 * Instantiate and add plugin to the FlipperClient. All your 
 RealmConfigurations should be passed to RealmDatabaseProvider:
