@@ -86,6 +86,8 @@ class RealmDatabaseDriver(
         val values = RealmHelper.getRows(
             databaseDescriptor.realmConfiguration,
             table,
+            order,
+            reverse,
             start,
             count
         )
