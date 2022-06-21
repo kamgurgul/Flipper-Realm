@@ -16,7 +16,7 @@
 
 buildscript {
     ext.kotlin_version = '1.6.21'
-    ext.dokka_version = '1.6.21'
+    ext.dokka_version = '1.6.10'
     ext.realm_version = '10.11.0'
     ext.flipper_version = '0.150.0'
     repositories {

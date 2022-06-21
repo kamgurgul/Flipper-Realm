@@ -26,13 +26,6 @@ android {
         minSdkVersion 16
         targetSdkVersion 31
     }
-
-    publishing {
-        singleVariant('release') {
-            withSourcesJar()
-            withJavadocJar()
-        }
-    }
 }
 
 dependencies {
