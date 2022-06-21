@@ -49,6 +49,5 @@ dependencies {
 
     releaseImplementation 'com.facebook.flipper:flipper-noop:0.28.0'
 
-    //implementation project(path: ':flipper-realm-android')
-    implementation "com.kgurgul.flipper:flipper-realm-android:2.2.0"
+    implementation project(path: ':flipper-realm-android')
 }
