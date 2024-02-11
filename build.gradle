@@ -15,32 +15,38 @@
  */
 
 buildscript {
-    ext.kotlin_version = '1.6.21'
-    ext.dokka_version = '1.6.10'
-    ext.realm_version = '10.11.0'
-    ext.flipper_version = '0.150.0'
+    ext.kotlin_version = '1.9.22'
+    ext.dokka_version = '1.9.10'
+    ext.realm_version = '10.18.0'
+    ext.flipper_version = '0.247.0'
     repositories {
         google()
         mavenCentral()
         gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath 'com.android.tools.build:gradle:8.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
         classpath "io.realm:realm-gradle-plugin:$realm_version"
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.16.0'
     }
 }
+
+plugins {
+    id "com.vanniktech.maven.publish" version "0.27.0"
+}
+
+import com.vanniktech.maven.publish.SonatypeHost
 
 allprojects {
     repositories {
         google()
         mavenCentral()
     }
-    plugins.withId("com.vanniktech.maven.publish") {
-        mavenPublish {
-            sonatypeHost = "S01"
-        }
-    }
+}
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.S01)
+
+    signAllPublications()
 }

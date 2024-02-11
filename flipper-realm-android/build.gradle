@@ -19,12 +19,25 @@ apply plugin: 'kotlin-android'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'com.vanniktech.maven.publish'
 
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+
+mavenPublishing {
+    configure(new AndroidSingleVariantLibrary("release", true, true))
+}
+
 android {
-    compileSdkVersion 31
+    compileSdkVersion 34
+
+    namespace = "com.kgurgul.flipper"
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 31
+        targetSdkVersion 34
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
