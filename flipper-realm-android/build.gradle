@@ -31,7 +31,7 @@ android {
     namespace = "com.kgurgul.flipper"
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 34
     }
 
