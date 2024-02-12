@@ -1,3 +1,6 @@
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+import com.vanniktech.maven.publish.SonatypeHost
+
 /*
  * Copyright 2019 KG Soft
  *
@@ -16,12 +19,12 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'com.vanniktech.maven.publish'
-
-import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+apply plugin: 'org.jetbrains.dokka'
 
 mavenPublishing {
+    publishToMavenCentral(SonatypeHost.S01)
+    signAllPublications()
     configure(new AndroidSingleVariantLibrary("release", true, true))
 }
 

@@ -36,17 +36,9 @@ plugins {
     id "com.vanniktech.maven.publish" version "0.27.0"
 }
 
-import com.vanniktech.maven.publish.SonatypeHost
-
 allprojects {
     repositories {
         google()
         mavenCentral()
     }
-}
-
-mavenPublishing {
-    publishToMavenCentral(SonatypeHost.S01)
-
-    signAllPublications()
 }
