@@ -29,13 +29,12 @@ mavenPublishing {
 }
 
 android {
-    compileSdkVersion 34
-
     namespace = "com.kgurgul.flipper"
 
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 34
+        compileSdkVersion = 34
     }
 
     compileOptions {

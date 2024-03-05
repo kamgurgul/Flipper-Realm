@@ -34,11 +34,6 @@ buildscript {
 
 plugins {
     id "com.vanniktech.maven.publish" version "0.27.0"
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
+    id 'org.jetbrains.kotlin.jvm' version '1.9.22' apply false
+    id 'io.realm.kotlin' version '1.11.0' apply false
 }

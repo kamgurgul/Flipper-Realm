@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        mavenCentral()
-        google()
-    }
-}
+package com.lgurgul.flipper.realm.kotlin
 
-include ':sample', ':flipper-realm-android'
-rootProject.name='Flipper-Realm'
-include ':flipper-realm-kotlin'
+import io.realm.kotlin.RealmConfiguration
+
+/**
+ * Inject all [RealmConfiguration] used inside the app
+ */
+interface RealmDatabaseProvider {
+
+    fun getRealmConfigurations(): List<RealmConfiguration>
+}
