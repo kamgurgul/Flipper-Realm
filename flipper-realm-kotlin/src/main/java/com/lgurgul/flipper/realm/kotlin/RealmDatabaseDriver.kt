@@ -36,10 +36,7 @@ class RealmDatabaseDriver(
     }
 
     override fun getTableNames(databaseDescriptor: RealmDatabaseDescriptor): List<String> {
-        /*return RealmHelper.getTableNames(
-            databaseDescriptor.realmConfiguration
-        )*/
-        TODO()
+        return RealmHelper.getTableNames(databaseDescriptor.realmConfiguration)
     }
 
     override fun getTableInfo(
