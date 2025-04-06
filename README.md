@@ -53,6 +53,10 @@ Features
 
 Currently it is not possible to modify database from Flipper.
 
+TODO
+====
+* Add support for Kotlin Multiplatform realm 
+
 License
 -------
     Copyright 2019 KG Soft
